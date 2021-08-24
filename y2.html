@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+       
+        .container{
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 56px;
+            padding-left: 2%;
+            padding-right: 2%;
+            width: 96%;
+            background-color: black;
+            opacity: .8;
+            display: flex;
+            justify-content: space-between;
+            font-size: 20px;
+            color: gray;
+        }
+        .container > div{
+            color: white;
+            /* border: 1px solid white; */
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input{
+            padding: 4px;
+            font-size: 20px;
+        }
+        button{
+            padding: 6px;
+            font-size: 25px;
+        }
+        .b1{
+           background-color:white;
+            padding-top: 75px;
+            display: grid;
+            grid-template-columns: repeat(4,25%);
+            grid-column-gap: 3%;
+            grid-row-gap: 25px;
+          
+           
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div>Youtube</div>
+        <div>
+            <input type="text" id="query">
+            <button onclick="findVideos()">Search</button>
+        </div>
+        <div>Sign In</div>
+    </div>
+    <div id="videos" class="b1">
+
+
+    </div>
+
+</body>
+
+</html>
+<script>
+
+    let videosDiv = document.getElementById("videos");
+    async function findVideos() {
+        try {
+            videosDiv.innerHTML = null;
+            var search = document.getElementById("query").value;
+            let res = await fetch(`https://youtube.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=20&q=${search}&key=AIzaSyAmFtoSm886IwR4SKyp9xbG59o9il6YLfA`);
+            let data = await res.json();
+            console.log("data: ", data);
+
+            let { items } = data;
+          
+
+            items.forEach(({ id: { videoId } }) => {
+                console.log(videoId);
+                var div = document.createElement("div");
+                div.innerHTML = `<iframe width="100%" height="200" src="https://www.youtube.com/embed/${videoId}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+                videosDiv.append(div);
+
+            });
+        }
+        catch (err) {
+            console.log("err:", err);
+        }
+    }
+ 
+</script> 
